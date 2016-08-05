@@ -1,25 +1,35 @@
 import { createStore } from "redux";
 
+const MARK_CHANGES_AS_COMMITTED = "cqrs-redux-js/events/MARK_CHANGES_AS_COMMITTED";
+
+const entityChangesReducer = (state = [], event) {
+	if( event.type === MARK_CHANGES_AS_COMMITTED )
+		return [];
+
+	return state.concat(event);
+}
+
 export default class AggregateRoot {
-	constructor(reducer) {
-		this.store = createStore(reducer);
-		this.events = [];
+	constructor(entityStateReducer, state) {
+		const reducer = {
+			entityState: entityStateReducer,
+			entityChanges: entityChangesReducer };
+		this.store = createStore(reducer, state);
 	}
 	
 	get state() {
-		return this.store.getState();
+		return this.store.getState().entityState;
 	}
 
 	applyChange(event) {
 		this.store.dispatch(event);
-		this.events.push(event);
 	}
 
 	getUncommittedChanges() {
-		return this.events;
+		return this.store.getState().entityChanges;
 	}
 
 	markChangesAsCommitted() {
-		this.events = [];
+		this.store.dispatch(MARK_CHANGES_AS_COMMITTED);
 	}
 }

@@ -4,8 +4,8 @@
 	"description": "",
 	"main": "dist/index.js",
 	"scripts": {
-		"test": "./scripts/test.sh",
-		"build": "./scripts/build.sh"
+		"test": "mocha --compilers js:babel-core/register",
+		"build": "babel src/ --out-dir dist --source-maps"
 	},
 	"author": "",
 	"license": "ISC",

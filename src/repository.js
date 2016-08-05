@@ -1,4 +1,4 @@
-export default sclass Repository {
+export default class Repository {
 	getById(id) {
 		throw new Error("Override me");
 	}
