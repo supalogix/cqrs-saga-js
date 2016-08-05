@@ -10,11 +10,15 @@ const entityChangesReducer = (state = [], event) {
 }
 
 export default class AggregateRoot {
-	constructor(entityStateReducer, state) {
+	constructor(events, entityStateReducer, initialState) {
+		const appState = events.reduce(
+			(state,event) => entityStateReducer(state,event),
+			initialState);
+
 		const reducer = {
 			entityState: entityStateReducer,
 			entityChanges: entityChangesReducer };
-		this.store = createStore(reducer, state);
+		this.store = createStore(reducer, appState);
 	}
 	
 	get state() {

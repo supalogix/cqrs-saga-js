@@ -34,3 +34,28 @@ console.log("change email");
 account.changeEmail("fake@nowhere.com");
 console.log(account.getUncommittedChanges());
 console.log(account.state);
+
+class AggregateRoot {
+	constructor(events, reducer, initialState) {
+		const appState = events.reduce(
+			(state,event) => reducer(state,event),
+			initialState);
+		this.store = createStore(reducer, appState);
+	}
+}
+
+class Account extends AggregateRoot {
+	constructor(events, props) {
+		super(events, reducer, initialState);
+	}
+
+	getBuilder() {
+		return new AccountBuilder();
+	}
+}
+
+class AccountBuilder {
+	build() {
+		return new Account([], this);
+	}
+}
