@@ -27,9 +27,11 @@ const reducer = (state = {}, event) => {
 	}
 };
 
+const initialState = {};
+
 export default class Account extends AggregateRoot {
-	constructor(props, state = {}) {
-		super(reducer);
+	constructor(events, props) {
+		super(events, reducer, initialState);
 
 		if(props) {
 			const e = Object.assign({}, props, {
@@ -61,3 +63,4 @@ export default class Account extends AggregateRoot {
 		});
 	}
 }
+
